@@ -41,4 +41,4 @@ tensorflow
 
 # Try it out
 
-covidash.s3-website.ca-central-1.amazonaws.com
+http://covidash.s3-website.ca-central-1.amazonaws.com/
