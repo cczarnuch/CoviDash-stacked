@@ -7,10 +7,9 @@ import CanvasJSReact from './canvasjs.react';
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-const dataUrl = 'https://covidash.s3.ca-central-1.amazonaws.com/covidlocpreds.json';
+const dataUrl = 'https://covidash.s3.ca-central-1.amazonaws.com/covidlocpreds-tranformers.json';
 
-var CovidData={'Mississauga':{'recorded':[],'prediction':[],'mean':[]},'Oakville':{'recorded':[],'prediction':[],'mean':[]},'Owen Sound':{'recorded':[],'prediction':[],'mean':[]},
+var CovidData={'Ontario':{'recorded':[],'prediction':[],'mean':[]},'Mississauga':{'recorded':[],'prediction':[],'mean':[]},'Oakville':{'recorded':[],'prediction':[],'mean':[]},'Owen Sound':{'recorded':[],'prediction':[],'mean':[]},
 'Kingston':{'recorded':[],'prediction':[],'mean':[]},'Guelph':{'recorded':[],'prediction':[],'mean':[]},'Toronto':{'recorded':[],'prediction':[],'mean':[]},
 'Hamilton':{'recorded':[],'prediction':[],'mean':[]},'Thorold':{'recorded':[],'prediction':[],'mean':[]},'Waterloo':{'recorded':[],'prediction':[],'mean':[]},
 'Newmarket':{'recorded':[],'prediction':[],'mean':[]},'Barrie':{'recorded':[],'prediction':[],'mean':[]},'Whitby':{'recorded':[],'prediction':[],'mean':[]},
@@ -25,17 +24,18 @@ var CovidData={'Mississauga':{'recorded':[],'prediction':[],'mean':[]},'Oakville
 
 var City=[];
 
-fetch(dataUrl)
+const request = async () =>{
+  await fetch(dataUrl)
   .then(response => response.json())
   .then(data =>{
     var count = 0;
-    var counter = 34;
+    var counter = 35;
     var temp_values = [];
     Object.entries(data).forEach(([key, value]) => {
       for (var i=0; i< value.length; i++){
         if(value[i]['prediction']==false){
           CovidData[value[i]['loc']]['recorded'].push({y: value[i]['value'], label: key, x: count});
-          if (temp_values.length>34){
+          if (temp_values.length>35){
             temp_values=[];
           }else{
             temp_values.push(value[i]['value']);
@@ -52,10 +52,11 @@ fetch(dataUrl)
       }
       count++;
     });
-
   })
   .catch(error => console.log('Failed because:' + {error}));
 
+}
+request();
 
 
 var options = {
@@ -75,19 +76,19 @@ var options = {
     type: "spline",
     name: "Prediction",
     showInLegend: true,
-    dataPoints: CovidData['Toronto']['prediction']
+    dataPoints: CovidData['Ontario']['prediction']
   },
   {
     type: "spline",
     name: "Mean",
     showInLegend: true,
-    dataPoints: CovidData['Toronto']['mean']
+    dataPoints: CovidData['Ontario']['mean']
   },
   {
     type: "spline",
     name: "Recorded",
     showInLegend: true,
-    dataPoints: CovidData['Toronto']['recorded']
+    dataPoints: CovidData['Ontario']['recorded']
   }
   ]
 }
